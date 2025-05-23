@@ -2,10 +2,17 @@ import { Block, Button, Suggestion } from "@/components";
 import Image from "next/image";
 import { suggestions } from "./data";
 import { PlusIcon } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  LinkedInSquare,
+  Settings,
+  TikTok,
+} from "@/components/icons";
 
 export default function SearchPage() {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-zinc-500 to-orange-300">
+    <div className="h-screen relative overflow-y-auto w-full bg-gradient-to-b from-zinc-500 from-20% to-orange-300">
       <div className="w-11/12 mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center pt-10">
@@ -38,6 +45,15 @@ export default function SearchPage() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Social media icons */}
+      <div className="fixed right-10 top-1/2 space-y-6 -translate-y-1/2">
+        <Instagram fillOpacity={0.6} className="cursor-pointer" />
+        <Facebook className="cursor-pointer" />
+        <LinkedInSquare className="cursor-pointer" />
+        <TikTok className="cursor-pointer" />
+        <Settings className="!mt-16 cursor-pointer" />
       </div>
     </div>
   );

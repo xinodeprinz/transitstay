@@ -63,13 +63,15 @@ const Block = () => {
 
       <div className="flex justify-between mt-2">
         <div className="flex items-center gap-2">
-          <Image
-            src={"/images/blocks/profile.png"}
-            width={100}
-            height={100}
-            alt="Person"
-            className="rounded-full size-7 object-cover"
-          />
+          {isTallest && (
+            <Image
+              src={"/images/blocks/profile.png"}
+              width={100}
+              height={100}
+              alt="Person"
+              className="rounded-full size-7 object-cover"
+            />
+          )}
           <div className="text-black/60 text-xs font-medium">AlicaJoy_203</div>
         </div>
         <ArrowUpRight className="bg-black/40 text-white p-1 rounded-full" />
