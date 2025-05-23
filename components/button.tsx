@@ -4,9 +4,11 @@ interface Props {
   type: "black" | "gray" | "white";
   text: string;
   icon?: JSX.Element;
+  className?: string;
+  onClick?: () => void;
 }
 
-const Button = ({ text, type, icon }: Props) => {
+const Button = ({ text, type, icon, className, onClick }: Props) => {
   const baseClasses =
     "rounded-full border text-sm border-white/50 py-2 px-5 flex gap-2 items-center justify-between transition-all duration-200 ease-in-out";
 
@@ -18,7 +20,10 @@ const Button = ({ text, type, icon }: Props) => {
       : "bg-white/80 text-zinc-500 hover:bg-white hover:text-zinc-700 hover:scale-105";
 
   return (
-    <button className={`${baseClasses} ${typeClasses}`}>
+    <button
+      className={`${baseClasses} ${typeClasses} ${className}`}
+      onClick={onClick}
+    >
       <span>{text}</span>
       {icon}
     </button>
