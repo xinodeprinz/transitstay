@@ -10,7 +10,7 @@ interface Props {
 
 const Button = ({ text, type, icon, className, onClick }: Props) => {
   const baseClasses =
-    "rounded-full border text-sm border-white/50 py-2 px-5 flex gap-2 items-center justify-between transition-all duration-200 ease-in-out";
+    "rounded-full border text-sm border-white/50 py-2 px-5 flex gap-2 items-center justify-between select-none transition-all duration-200 ease-in-out";
 
   const typeClasses =
     type === "black"

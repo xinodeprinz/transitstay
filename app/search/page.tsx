@@ -114,7 +114,12 @@ export default function SearchPage() {
         <div className="lg:w-5/6 mx-auto mt-10">
           <div className="flex items-center justify-center flex-wrap gap-3">
             {data.length > 0 && (
-              <Button text="Delete all" type="black" onClick={deleteAll} />
+              <Button
+                text="Delete all"
+                type="black"
+                onClick={deleteAll}
+                className="!bg-zinc-700/60 !opacity-60"
+              />
             )}
             {suggestions.map((suggestion, index) => (
               <Suggestion
@@ -131,9 +136,30 @@ export default function SearchPage() {
               icon={<PlusIcon size={16} className="mt-1" />}
               onClick={() => setShowAdd(true)}
             />
-            {data.length > 0 && <Button text="Generate Gallery" type="black" />}
+            {data.length > 0 && (
+              <Button
+                text="Generate Gallery"
+                type="black"
+                className="!bg-zinc-700"
+              />
+            )}
           </div>
 
+          {/* Show when the page is empty */}
+          {data.length <= 0 && (
+            <div className="mt-12 text-center">
+              <p className="font-serif text-lg italic text-amber-50/90 tracking-wide mb-2">
+                "Begin your journey by adding the first entry"
+              </p>
+              <p className="text-sm text-amber-100/80 font-medium">
+                Click{" "}
+                <span className="font-bold text-amber-50 underline underline-offset-4">
+                  Add new
+                </span>{" "}
+                above to continue
+              </p>
+            </div>
+          )}
           {loading ? (
             <Skeleton />
           ) : (

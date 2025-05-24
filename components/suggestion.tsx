@@ -24,7 +24,7 @@ const Suggestion = ({
 
   return (
     <div
-      className={`text-nowrap cursor-pointer flex gap-2 items-center justify-between rounded-full border text-sm py-2 px-5 transition-all
+      className={`text-nowrap select-none transition-all duration-200 ease-in-out cursor-pointer flex gap-2 items-center justify-between hover:scale-105 rounded-full border text-sm py-2 px-5
         ${
           isActive
             ? "bg-white/50 text-white border-white"
