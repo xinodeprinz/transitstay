@@ -36,13 +36,15 @@ const ArticleBlock = ({ article }: Props) => {
 
       <div className="flex justify-between mt-2">
         <div className="flex items-center gap-2">
-          <Image
-            src={"/images/blocks/profile.png"}
-            width={100}
-            height={100}
-            alt={article.user.name}
-            className="rounded-full size-7 object-cover"
-          />
+          {article.user.photo && (
+            <Image
+              src={article.user.photo}
+              width={100}
+              height={100}
+              alt={article.user.name}
+              className="rounded-full size-7 object-cover"
+            />
+          )}
           <div className="text-black/60 text-xs font-medium">
             {article.user.name}
           </div>

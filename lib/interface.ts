@@ -44,3 +44,9 @@ export interface Photo {
   liked?: boolean; // Optional (may not always be present)
   alt?: string; // Optional (alternative text description)
 }
+
+export interface Result {
+  picture: {
+    medium: string;
+  };
+}

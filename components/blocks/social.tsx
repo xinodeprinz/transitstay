@@ -49,13 +49,15 @@ const SocialBlock = ({ social }: Props) => {
 
       <div className="flex justify-between mt-2">
         <div className="flex items-center gap-2">
-          <Image
-            src={"/images/blocks/profile.png"}
-            width={100}
-            height={100}
-            alt={social.user.name}
-            className="rounded-full size-7 object-cover"
-          />
+          {social.user.photo && (
+            <Image
+              src={social.user.photo}
+              width={100}
+              height={100}
+              alt={social.user.name}
+              className="rounded-full size-7 object-cover"
+            />
+          )}
           <div className="text-black/60 text-xs font-medium">
             {social.user.name}
           </div>
