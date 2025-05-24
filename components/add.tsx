@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, FormEvent } from "react";
 import { debounce } from "lodash";
 import Button from "./button";
 import { X } from "lucide-react";
@@ -6,9 +6,15 @@ import getSuggestions from "@/lib/data/suggestions";
 
 interface AddInputProps {
   onClose: () => void;
+  updateSuggestions: (values: string[]) => void;
+  setQueries: (value: string) => void;
 }
 
-const AddInput: React.FC<AddInputProps> = ({ onClose }) => {
+const AddInput: React.FC<AddInputProps> = ({
+  onClose,
+  updateSuggestions,
+  setQueries,
+}) => {
   const [query, setQuery] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
@@ -48,12 +54,18 @@ const AddInput: React.FC<AddInputProps> = ({ onClose }) => {
 
   const handleSuggestionClick = (suggestion: string) => {
     setQuery(suggestion);
-    setSuggestions([]);
     setShowSuggestions(false);
   };
 
   const handleBlur = () => {
     setTimeout(() => setShowSuggestions(false), 100);
+  };
+
+  const handleAdd = (e: FormEvent) => {
+    e.preventDefault();
+    updateSuggestions([...new Set(suggestions)]);
+    setQueries(query);
+    onClose();
   };
 
   return (
@@ -67,7 +79,10 @@ const AddInput: React.FC<AddInputProps> = ({ onClose }) => {
         <X className="h-5 w-5 text-zinc-800" />
       </button>
 
-      <form className="relative w-full max-w-xl top-[20%] mx-auto px-4 sm:px-0">
+      <form
+        className="relative w-full max-w-xl top-[20%] mx-auto px-4 sm:px-0"
+        onSubmit={handleAdd}
+      >
         <div className="flex w-full bg-white/90 rounded-full shadow-lg backdrop-blur-md overflow-hidden">
           <input
             type="text"

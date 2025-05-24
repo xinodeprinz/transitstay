@@ -10,7 +10,6 @@ import {
   Suggestion,
 } from "@/components";
 import Image from "next/image";
-import { suggestions } from "./data";
 import { PlusIcon } from "lucide-react";
 import {
   Facebook,
@@ -23,14 +22,11 @@ import { getData } from "@/lib/data";
 import { Article, Social } from "@/lib/interface";
 
 export default function SearchPage() {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [showAdd, setShowAdd] = useState<boolean>(false);
-  const [queries, setQueries] = useState<string[]>([
-    "london",
-    "paris",
-    "cameroon",
-  ]);
+  const [queries, setQueries] = useState<string[]>([]);
   const [data, setData] = useState<(Article | Social)[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -47,8 +43,21 @@ export default function SearchPage() {
       }
     };
 
-    fetchItems();
+    // Fetch only if at least one query is present
+    if (queries.length > 0) {
+      fetchItems();
+    }
   }, [queries]);
+
+  const updateQueries = (value: string) => {
+    if (!queries.includes(value)) {
+      setQueries((prevQueries) => [...prevQueries, value]);
+    }
+  };
+
+  const updateSuggestions = (values: string[]) => {
+    setSuggestions((prevSuggestions) => [...prevSuggestions, ...values]);
+  };
 
   return (
     <div className="relative h-screen bg-gradient-to-b from-zinc-500 from-20% to-orange-300 overflow-y-auto">
@@ -67,28 +76,34 @@ export default function SearchPage() {
       <div className="mt-28" />
 
       {/* Add Input */}
-      {showAdd && <AddInput onClose={() => setShowAdd(false)} />}
+      {showAdd && (
+        <AddInput
+          onClose={() => setShowAdd(false)}
+          updateSuggestions={updateSuggestions}
+          setQueries={updateQueries}
+        />
+      )}
 
       {/* Page content */}
       <div className="w-11/12 max-w-7xl mx-auto">
-        {loading ? (
-          <Skeleton />
-        ) : (
-          <div className="lg:w-5/6 mx-auto mt-10">
-            <div className="flex items-center justify-center flex-wrap gap-3">
-              <Button text="Delete all" type="black" />
-              {suggestions.map((suggestion, index) => (
-                <Suggestion key={index} text={suggestion} />
-              ))}
-              <Button
-                text="Add new"
-                type="white"
-                icon={<PlusIcon size={16} className="mt-1" />}
-                onClick={() => setShowAdd(true)}
-              />
-              <Button text="Generate Gallery" type="black" />
-            </div>
+        <div className="lg:w-5/6 mx-auto mt-10">
+          <div className="flex items-center justify-center flex-wrap gap-3">
+            <Button text="Delete all" type="black" />
+            {suggestions.map((suggestion, index) => (
+              <Suggestion key={index} text={suggestion} />
+            ))}
+            <Button
+              text="Add new"
+              type="white"
+              icon={<PlusIcon size={16} className="mt-1" />}
+              onClick={() => setShowAdd(true)}
+            />
+            <Button text="Generate Gallery" type="black" />
+          </div>
 
+          {loading ? (
+            <Skeleton />
+          ) : (
             <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 xl:columns-6 gap-0 space-x-3 space-y-5 mt-10">
               {data.map((item, key) => {
                 if (item.type === "article") {
@@ -98,8 +113,8 @@ export default function SearchPage() {
                 }
               })}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Social sidebar */}
