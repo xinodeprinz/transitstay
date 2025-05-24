@@ -4,4 +4,4 @@ export { default as Block } from "./block";
 export { default as BlockSkeleton } from "./skeleton/block";
 export { default as SuggestionSkeleton } from "./skeleton/suggestion";
 export { default as Skeleton } from "./skeleton";
-export { default as SearchInput } from "./search-input";
+export { default as AddInput } from "./add";
