@@ -50,3 +50,7 @@ export interface Result {
     medium: string;
   };
 }
+
+export interface Suggestion {
+  name: string;
+}

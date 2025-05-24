@@ -1,47 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { debounce } from "lodash";
 import Button from "./button";
 import { X } from "lucide-react";
-
-const suggestionsList = [
-  "React",
-  "Next.js",
-  "Node.js",
-  "NestJS",
-  "Laravel",
-  "MongoDB",
-  "MySQL",
-  "Tailwind CSS",
-  "TypeScript",
-  "JavaScript",
-];
+import getSuggestions from "@/lib/data/suggestions";
 
 interface AddInputProps {
   onClose: () => void;
 }
 
 const AddInput: React.FC<AddInputProps> = ({ onClose }) => {
-  const [query, setQuery] = useState("");
-  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [query, setQuery] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  // Debounced fetch function
+  const debouncedFetchSuggestions = useCallback(
+    debounce(async (value: string) => {
+      try {
+        const res = await getSuggestions(value);
+        setSuggestions(res);
+        setShowSuggestions(true);
+      } catch (error) {
+        console.error("Fetch error:", error);
+        setShowSuggestions(false);
+      }
+    }, 300), // 300ms delay
+    []
+  );
+
+  // Update query and trigger debounced fetch
+  const handleInputChange = (value: string) => {
     setQuery(value);
-
     if (value.trim()) {
-      const filtered = suggestionsList.filter((item) =>
-        item.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredSuggestions(filtered);
-      setShowSuggestions(true);
+      debouncedFetchSuggestions(value);
     } else {
+      setSuggestions([]);
       setShowSuggestions(false);
     }
   };
 
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      debouncedFetchSuggestions.cancel();
+    };
+  }, [debouncedFetchSuggestions]);
+
   const handleSuggestionClick = (suggestion: string) => {
     setQuery(suggestion);
-    setFilteredSuggestions([]);
+    setSuggestions([]);
     setShowSuggestions(false);
   };
 
@@ -67,7 +74,7 @@ const AddInput: React.FC<AddInputProps> = ({ onClose }) => {
             placeholder="Type here..."
             className="flex-grow px-5 py-2 bg-transparent text-sm text-zinc-800 placeholder:text-zinc-400 focus:outline-none"
             value={query}
-            onChange={handleChange}
+            onChange={(e) => handleInputChange(e.target.value)}
             onFocus={() => query && setShowSuggestions(true)}
             onBlur={handleBlur}
           />
@@ -78,9 +85,9 @@ const AddInput: React.FC<AddInputProps> = ({ onClose }) => {
           />
         </div>
 
-        {showSuggestions && filteredSuggestions.length > 0 && (
+        {showSuggestions && suggestions.length > 0 && (
           <ul className="absolute z-10 w-full bg-white shadow-md rounded-b-xl max-h-60 overflow-y-auto mt-1 text-sm">
-            {filteredSuggestions.map((suggestion, index) => (
+            {suggestions.map((suggestion, index) => (
               <li
                 key={index}
                 className="px-5 py-2 hover:bg-zinc-100 cursor-pointer"

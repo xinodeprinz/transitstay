@@ -25,7 +25,11 @@ import { Article, Social } from "@/lib/interface";
 export default function SearchPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [showAdd, setShowAdd] = useState<boolean>(false);
-  const [query, setQuery] = useState<string>("london");
+  const [queries, setQueries] = useState<string[]>([
+    "london",
+    "paris",
+    "cameroon",
+  ]);
   const [data, setData] = useState<(Article | Social)[]>([]);
 
   useEffect(() => {
@@ -33,7 +37,7 @@ export default function SearchPage() {
       try {
         setLoading(true);
 
-        const items = await getData(query);
+        const items = await getData(queries);
         setData(items);
       } catch (error) {
         alert("An error occurred! Please refresh the page.");
@@ -44,7 +48,7 @@ export default function SearchPage() {
     };
 
     fetchItems();
-  }, [query]);
+  }, [queries]);
 
   return (
     <div className="relative h-screen bg-gradient-to-b from-zinc-500 from-20% to-orange-300 overflow-y-auto">
