@@ -146,7 +146,7 @@ export default function SearchPage() {
           </div>
 
           {/* Show when the page is empty */}
-          {data.length <= 0 && (
+          {data.length <= 0 && !loading && (
             <div className="mt-12 text-center">
               <p className="font-serif text-lg italic text-amber-50/90 tracking-wide mb-2">
                 "Begin your journey by adding the first entry"
