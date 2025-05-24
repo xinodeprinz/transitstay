@@ -24,7 +24,7 @@ const AddInput: React.FC<AddInputProps> = ({
     debounce(async (value: string) => {
       try {
         const res = await getSuggestions(value);
-        setSuggestions(res);
+        setSuggestions([...new Set(res)]);
         setShowSuggestions(true);
       } catch (error) {
         console.error("Fetch error:", error);
@@ -63,7 +63,7 @@ const AddInput: React.FC<AddInputProps> = ({
 
   const handleAdd = (e: FormEvent) => {
     e.preventDefault();
-    updateSuggestions([...new Set(suggestions)]);
+    updateSuggestions(suggestions);
     setQueries(query);
     onClose();
   };

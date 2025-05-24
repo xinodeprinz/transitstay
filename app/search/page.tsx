@@ -59,6 +59,31 @@ export default function SearchPage() {
     setSuggestions((prevSuggestions) => [...prevSuggestions, ...values]);
   };
 
+  const updateQueriesFromSuggestion = (text: string, isActive: boolean) => {
+    if (isActive) {
+      setQueries((prevQueries) => [...prevQueries, text]);
+    } else {
+      const newQueries = queries.filter((q) => q !== text);
+      setQueries(newQueries);
+    }
+  };
+
+  const deleteSuggestion = (text: string) => {
+    // Remove from queries
+    const newQueries = queries.filter((q) => q !== text);
+    setQueries(newQueries);
+
+    // Remove from suggestions
+    const newSuggestions = suggestions.filter((s) => s !== text);
+    setSuggestions(newSuggestions);
+  };
+
+  const deleteAll = () => {
+    setQueries([]);
+    setSuggestions([]);
+    setData([]);
+  };
+
   return (
     <div className="relative h-screen bg-gradient-to-b from-zinc-500 from-20% to-orange-300 overflow-y-auto">
       {/* Fixed header when scrolled */}
@@ -88,9 +113,17 @@ export default function SearchPage() {
       <div className="w-11/12 max-w-7xl mx-auto">
         <div className="lg:w-5/6 mx-auto mt-10">
           <div className="flex items-center justify-center flex-wrap gap-3">
-            <Button text="Delete all" type="black" />
+            {data.length > 0 && (
+              <Button text="Delete all" type="black" onClick={deleteAll} />
+            )}
             {suggestions.map((suggestion, index) => (
-              <Suggestion key={index} text={suggestion} />
+              <Suggestion
+                key={index}
+                text={suggestion}
+                active={queries.includes(suggestion)}
+                updateQueries={updateQueriesFromSuggestion}
+                onDelete={deleteSuggestion}
+              />
             ))}
             <Button
               text="Add new"
@@ -98,7 +131,7 @@ export default function SearchPage() {
               icon={<PlusIcon size={16} className="mt-1" />}
               onClick={() => setShowAdd(true)}
             />
-            <Button text="Generate Gallery" type="black" />
+            {data.length > 0 && <Button text="Generate Gallery" type="black" />}
           </div>
 
           {loading ? (
