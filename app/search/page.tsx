@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { AddInput, Block, Button, Skeleton, Suggestion } from "@/components";
+import {
+  AddInput,
+  ArticleBlock,
+  Button,
+  Skeleton,
+  SocialBlock,
+  Suggestion,
+} from "@/components";
 import Image from "next/image";
 import { suggestions } from "./data";
 import { PlusIcon } from "lucide-react";
@@ -12,17 +19,32 @@ import {
   Settings,
   TikTok,
 } from "@/components/icons";
+import { getData } from "@/lib/data";
+import { Article, Social } from "@/lib/interface";
 
 export default function SearchPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [showAdd, setShowAdd] = useState<boolean>(false);
+  const [query, setQuery] = useState<string>("london");
+  const [data, setData] = useState<(Article | Social)[]>([]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
+    const fetchItems = async () => {
+      try {
+        setLoading(true);
+
+        const items = await getData(query);
+        setData(items);
+      } catch (error) {
+        alert("An error occurred! Please refresh the page.");
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
+  }, [query]);
 
   return (
     <div className="relative h-screen bg-gradient-to-b from-zinc-500 from-20% to-orange-300 overflow-y-auto">
@@ -64,9 +86,13 @@ export default function SearchPage() {
             </div>
 
             <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 xl:columns-6 gap-0 space-x-3 space-y-5 mt-10">
-              {Array.from({ length: 300 }, (_, index) => (
-                <Block key={index} />
-              ))}
+              {data.map((item, key) => {
+                if (item.type === "article") {
+                  return <ArticleBlock key={key} article={item} />;
+                } else {
+                  return <SocialBlock key={key} social={item} />;
+                }
+              })}
             </div>
           </div>
         )}
